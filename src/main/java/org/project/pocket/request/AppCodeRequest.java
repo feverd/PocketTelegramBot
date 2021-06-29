@@ -1,10 +1,10 @@
+/*
 package org.project.pocket.request;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.parser.ParseException;
 import org.project.entity.PocketAppCode;
-import org.project.pocket.command.AppCodeCmd;
+import org.project.pocket.commands.AppCodeCmd;
 
 
 import java.io.IOException;
@@ -54,3 +54,4 @@ public class AppCodeRequest {
     }
 
 }
+*/

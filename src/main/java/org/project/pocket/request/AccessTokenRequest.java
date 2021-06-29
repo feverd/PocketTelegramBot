@@ -1,9 +1,10 @@
+/*
 package org.project.pocket.request;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.project.entity.PocketUser;
-import org.project.pocket.command.AccessTokenCmd;
+import org.project.pocket.commands.AccessTokenCmd;
 
 
 import java.io.IOException;
@@ -48,3 +49,4 @@ public class AccessTokenRequest {
 
 
 }
+*/
