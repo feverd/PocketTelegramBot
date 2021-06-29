@@ -30,6 +30,8 @@ public class PocketUserDao implements Dao<PocketUser, Long> {
 
     @Override
     public void deleteByKey(Long key) {
+        manager.getTransaction().begin();
         manager.remove(getByKey(key));
+        manager.getTransaction().commit();
     }
 }
