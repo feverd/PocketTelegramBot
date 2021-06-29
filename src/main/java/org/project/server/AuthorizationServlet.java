@@ -4,8 +4,9 @@ import org.project.dao.PocketCodeDao;
 import org.project.dao.PocketUserDao;
 import org.project.entity.PocketAppCode;
 import org.project.entity.PocketUser;
-import org.project.pocket.command.AccessTokenCmd;
-import org.project.pocket.request.AccessTokenRequest;
+import org.project.pocket.commands.AccessTokenCmd;
+import org.project.pocket.request.PocketRequest;
+import org.project.service.PropertiesReader;
 
 
 import javax.persistence.EntityManager;
@@ -25,13 +26,11 @@ public class AuthorizationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // TODO обрабатывать исключение или пробрасывать ?
 
+        //TODO where to create maneger? in methods or in class fields
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("hibernate-connection");
         EntityManager manager = factory.createEntityManager();
-        PocketUserDao pocketUserDao = new PocketUserDao(manager);
         PocketCodeDao pocketCodeDao = new PocketCodeDao(manager);
 
-        // переделать чтоб каждый раз так не делать
-        // тк каждый раз дропать тейбл ошибка у сервра. тк по запросу консюмер кее много результатов
 
         PocketAppCode pocketAppCode = pocketCodeDao.getByKey("97779-9e5f86561e627ae0c473d550");
         if (pocketAppCode == null) {
@@ -40,20 +39,38 @@ public class AuthorizationServlet extends HttpServlet {
             String code = pocketAppCode.getCode();
 
             System.out.println(code);
-            // достать из репозитория
-            AccessTokenRequest userTokenRequest =
-                    new AccessTokenRequest(new AccessTokenCmd(pocketAppCode.getConsumerKey(), code));
 
-            PocketUser user = userTokenRequest.getUser();
-            user.setChatId(Long.parseLong(req.getParameter("chatId")));
 
-            // test
-            pocketUserDao.add(user);
-            System.out.println(user);
+            getAndSaveUser(manager, pocketAppCode, Long.parseLong(req.getParameter("chatId")));
 
-            resp.sendRedirect("https://t.me/PostPocket_bot");
+            resp.sendRedirect(new PropertiesReader().getPropertyValue("server.redirect"));
         }
     }
 
+
+    private boolean isUser(Long chatId, PocketUserDao pocketUserDao) {
+        boolean result = true;
+        if (pocketUserDao.getByKey(chatId) == null) result = false;
+        return result;
+    }
+
+    private void getAndSaveUser(EntityManager manager, PocketAppCode pocketAppCode, Long chatId) {
+        PocketUserDao pocketUserDao = new PocketUserDao(manager);
+
+        if (isUser(chatId, pocketUserDao)) {
+            return;
+        }
+
+
+        // TODO ask about commands
+        PocketUser user = PocketRequest.getPocketUser(new AccessTokenCmd(/*pocketAppCode.getConsumerKey(), */pocketAppCode.getCode()));
+        user.setChatId(chatId);
+
+
+        pocketUserDao.add(user);
+
+        //TODO delete
+        System.out.println(user);
+    }
 
 }
