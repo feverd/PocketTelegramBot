@@ -4,25 +4,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "tb_users")
 public class PocketUser {
     @Id
     @JsonIgnore
-    private Long chatId;
+    @Column(name = "chatId")
+    private Long id;
     @JsonProperty(value = "access_token")
     private String accessToken;
     @JsonProperty(value = "username")
     private String email;
 
-    public Long getChatId() {
-        return chatId;
+    public Long getId() {
+        return id;
     }
 
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAccessToken() {
@@ -44,7 +44,7 @@ public class PocketUser {
     @Override
     public String toString() {
         return "PocketUser{" +
-                "chatId=" + chatId +
+                "id=" + id +
                 ", accessToken='" + accessToken + '\'' +
                 ", email='" + email + '\'' +
                 '}';
