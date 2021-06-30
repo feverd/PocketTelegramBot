@@ -1,7 +1,10 @@
-package org.project.pocket.command;
+package org.project.pocket.commands;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.project.service.PropertiesReader;
+
+import java.util.Objects;
 
 public class AccessTokenCmd {
     @JsonIgnore
@@ -11,9 +14,9 @@ public class AccessTokenCmd {
     @JsonProperty(value = "code")
     private String code;
 
-    public AccessTokenCmd(String consumerKey, String code) {
+    public AccessTokenCmd(/*String consumerKey,*/ String code) {
         this.authorizeUrl = "https://getpocket.com/v3/oauth/authorize";
-        this.consumerKey = consumerKey;
+        setConsumerKey(new PropertiesReader().getApplicationPropertyValue("pocket.consumerKey"));
         this.code = code;
     }
 
@@ -25,8 +28,8 @@ public class AccessTokenCmd {
         return consumerKey;
     }
 
-    public void setConsumerKey(String consumerKey) {
-        this.consumerKey = consumerKey;
+    private void setConsumerKey(String consumerKey) {
+        this.consumerKey = Objects.requireNonNull(consumerKey);
     }
 
     public String getCode() {

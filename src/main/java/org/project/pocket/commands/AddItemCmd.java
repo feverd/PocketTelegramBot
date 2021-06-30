@@ -1,13 +1,15 @@
-package org.project.pocket.command;
+package org.project.pocket.commands;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AddItemCmd {
+public class AddItemCmd implements Cmd{
     @JsonIgnore
-    private final String addUrl;
+    private final String uri;
     private String url;
     private String title;
     private String tags;
@@ -17,30 +19,27 @@ public class AddItemCmd {
     private String accessToken;
 
     public AddItemCmd(String url, String consumerKey, String accessToken) {
-        this.addUrl = "https://getpocket.com/v3/add";
+        this.uri = "https://getpocket.com/v3/add";
         this.url = url;
-        this.consumerKey = consumerKey;
+        setConsumerKey(consumerKey);
         this.accessToken = accessToken;
     }
 
-    public String getAddUrl() {
-        return addUrl;
-    }
 
     public String getUrl() {
         return url;
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.url = Objects.requireNonNull(url);
     }
 
     public String getConsumerKey() {
         return consumerKey;
     }
 
-    public void setConsumerKey(String consumerKey) {
-        this.consumerKey = consumerKey;
+    private void setConsumerKey(String consumerKey) {
+        this.consumerKey = Objects.requireNonNull(consumerKey);
     }
 
     public String getAccessToken() {
@@ -49,5 +48,10 @@ public class AddItemCmd {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    @Override
+    public String getUri() {
+        return uri;
     }
 }

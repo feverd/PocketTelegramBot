@@ -1,7 +1,9 @@
-package org.project.pocket.command;
+package org.project.pocket.commands;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Objects;
 
 public class AppCodeCmd {
     @JsonIgnore
@@ -13,7 +15,7 @@ public class AppCodeCmd {
 
     public AppCodeCmd(String consumerKey, String redirectUri) {
         this.requestUrl = "https://getpocket.com/v3/oauth/request";
-        this.consumerKey = consumerKey;
+        setConsumerKey(consumerKey);
         this.redirectUri = redirectUri;
     }
 
@@ -25,8 +27,8 @@ public class AppCodeCmd {
         return consumerKey;
     }
 
-    public void setConsumerKey(String consumerKey) {
-        this.consumerKey = consumerKey;
+    private void setConsumerKey(String consumerKey) {
+        this.consumerKey = Objects.requireNonNull(consumerKey);
     }
 
     public String getRedirectUri() {
