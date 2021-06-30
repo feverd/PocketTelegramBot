@@ -92,6 +92,31 @@
             <version>42.2.4</version>
         </dependency>
 
+        <!--<dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            &lt;!&ndash;            <version>2.14.1</version>&ndash;&gt;
+            &lt;!&ndash;            через переменную&ndash;&gt;
+            <version>2.14.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            &lt;!&ndash;            <version>2.14.1</version>&ndash;&gt;
+            &lt;!&ndash;            перенесем в переменную&ndash;&gt;
+            <version>2.14.0</version>
+
+            &lt;!&ndash;            еще можно указать область видимости данной зависимости&ndash;&gt;
+            &lt;!&ndash;            доступно всегда&ndash;&gt;
+            <scope>compile</scope>
+
+            &lt;!&ndash;            для тестирования&ndash;&gt;
+            &lt;!&ndash;            <scope>test</scope>&ndash;&gt;
+
+            &lt;!&ndash;            <scope>provided</scope>&ndash;&gt;
+        </dependency>-->
+
     </dependencies>
 
 
