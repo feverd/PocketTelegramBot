@@ -7,6 +7,7 @@ import org.project.entity.PocketUser;
 import org.project.pocket.commands.AccessTokenCmd;
 import org.project.pocket.commands.AddItemCmd;
 import org.project.pocket.commands.AppCodeCmd;
+import org.project.pocket.commands.Cmd;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,8 +28,8 @@ public class PocketRequest {
 
             HttpResponse<String> response = client.
                     send(getRequest(tokenCmd.getAuthorizeUrl(),
-                    mapper.writeValueAsString(tokenCmd)),
-                    HttpResponse.BodyHandlers.ofString());
+                            mapper.writeValueAsString(tokenCmd)),
+                            HttpResponse.BodyHandlers.ofString());
 
             user = mapper.readValue(response.body(), PocketUser.class);
         } catch (JsonProcessingException e) {
@@ -49,12 +50,10 @@ public class PocketRequest {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
-            HttpResponse<String> response = client.
-                    send(getRequest(appCodeCmd.getRequestUrl(),
-                    mapper.writeValueAsString(appCodeCmd)),
-                    HttpResponse.BodyHandlers.ofString());
-
-            System.out.println(response.body());
+            HttpResponse<String> response = client
+                    .send(getRequest(appCodeCmd.getRequestUrl(),
+                            mapper.writeValueAsString(appCodeCmd)),
+                            HttpResponse.BodyHandlers.ofString());
 
 
             pocketAppCode = mapper.readValue(response.body(), PocketAppCode.class);
@@ -76,22 +75,23 @@ public class PocketRequest {
         boolean result = false;
         HttpClient client = HttpClient.newHttpClient();
 
-
-        try {
-            HttpResponse<String> response = client.
+        /*try {*/
+            /*HttpResponse<String> response = client.
                     send(getRequest(addItemCmd.getAddUrl(),
-                    new ObjectMapper().writeValueAsString(addItemCmd)),
-                    HttpResponse.BodyHandlers.ofString());
+                            new ObjectMapper().writeValueAsString(addItemCmd)),
+                            HttpResponse.BodyHandlers.ofString());*/
+
+            HttpResponse<String> response = sendRequest(client, addItemCmd);
 
             if (response.statusCode() == 200) result = true;
 
-        } catch (JsonProcessingException e) {
+        /*} catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         return result;
     }
@@ -105,5 +105,29 @@ public class PocketRequest {
         return request;
     }
 
+    private static <T> HttpResponse<String> sendRequest(HttpClient client, Cmd cmd) {
+        HttpResponse<String> response = null;
+        try {
 
+            response = client
+                    .send(getRequest(cmd.getUri(),
+                            new ObjectMapper().writeValueAsString((T) cmd)),
+                            HttpResponse.BodyHandlers.ofString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    /*private static <T> T getObjectFromJson(String jsonText, Object object, ObjectMapper mapper) {
+        try {
+            object = mapper.readValue(jsonText, object.getClass());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return (T) object;
+    }*/
 }
