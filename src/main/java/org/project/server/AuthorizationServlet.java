@@ -26,7 +26,7 @@ public class AuthorizationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // TODO обрабатывать исключение или пробрасывать ?
 
-        //TODO where to create maneger? in methods or in class fields
+        //TODO where to create manager? in methods or in class fields
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("hibernate-connection");
         EntityManager manager = factory.createEntityManager();
         PocketCodeDao pocketCodeDao = new PocketCodeDao(manager);
@@ -41,30 +41,30 @@ public class AuthorizationServlet extends HttpServlet {
             System.out.println(code);
 
 
-            getAndSaveUser(manager, pocketAppCode, Long.parseLong(req.getParameter("chatId")));
+            getAndSaveUser(manager, pocketAppCode, Long.parseLong(req.getParameter("id")));
 
-            resp.sendRedirect(new PropertiesReader().getPropertyValue("server.redirect"));
+            resp.sendRedirect(PropertiesReader.getApplicationPropertyValue("server.redirect"));
         }
     }
 
 
-    private boolean isUser(Long chatId, PocketUserDao pocketUserDao) {
+    private boolean isUser(Long id, PocketUserDao pocketUserDao) {
         boolean result = true;
-        if (pocketUserDao.getByKey(chatId) == null) result = false;
+        if (pocketUserDao.getByKey(id) == null) result = false;
         return result;
     }
 
-    private void getAndSaveUser(EntityManager manager, PocketAppCode pocketAppCode, Long chatId) {
+    private void getAndSaveUser(EntityManager manager, PocketAppCode pocketAppCode, Long id) {
         PocketUserDao pocketUserDao = new PocketUserDao(manager);
 
-        if (isUser(chatId, pocketUserDao)) {
+        if (isUser(id, pocketUserDao)) {
             return;
         }
 
 
         // TODO ask about commands
         PocketUser user = PocketRequest.getPocketUser(new AccessTokenCmd(/*pocketAppCode.getConsumerKey(), */pocketAppCode.getCode()));
-        user.setChatId(chatId);
+        user.setId(id);
 
 
         pocketUserDao.add(user);
