@@ -1,0 +1,81 @@
+2021-06-29 13:30:40,468 WARN o.h.j.b.s.ProviderChecker:58 [main] HHH015016: Encountered a deprecated javax.persistence.spi.PersistenceProvider [org.hibernate.ejb.HibernatePersistence]; [org.hibernate.jpa.HibernatePersistenceProvider] will be used instead.
+2021-06-29 13:30:40,494 INFO o.h.j.i.u.LogHelper:31 [main] HHH000204: Processing PersistenceUnitInfo [name: hibernate-connection]
+2021-06-29 13:30:40,609 INFO o.h.Version:44 [main] HHH000412: Hibernate ORM core version 5.4.31.Final
+2021-06-29 13:30:41,179 INFO o.h.a.c.r.j.JavaReflectionManager:56 [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-29 13:30:41,554 WARN o.h.e.j.c.i.ConnectionProviderInitiator:272 [main] HHH000022: c3p0 properties were encountered, but the c3p0 provider class was not found on the classpath; these properties are going to be ignored.
+2021-06-29 13:30:41,559 WARN o.h.e.j.c.i.DriverManagerConnectionProviderImpl:72 [main] HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-06-29 13:30:41,567 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:115 [main] HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost/pocket]
+2021-06-29 13:30:41,568 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:124 [main] HHH10001001: Connection properties: {password=****, user=fever_d}
+2021-06-29 13:30:41,569 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:129 [main] HHH10001003: Autocommit mode: false
+2021-06-29 13:30:41,572 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl$PooledConnections:259 [main] HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-06-29 13:30:41,705 INFO o.h.d.Dialect:175 [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL82Dialect
+2021-06-29 13:30:43,277 INFO o.h.r.t.b.j.i.DdlTransactionIsolatorNonJtaImpl:47 [main] HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@52bf7bf6] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2021-06-29 13:30:43,316 INFO o.h.e.t.j.p.i.JtaPlatformInitiator:52 [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-29 13:30:44,198 ERROR o.p.b.app:60 [main] Bot token and username can't be empty
+2021-06-29 13:31:40,357 WARN o.h.j.b.s.ProviderChecker:58 [main] HHH015016: Encountered a deprecated javax.persistence.spi.PersistenceProvider [org.hibernate.ejb.HibernatePersistence]; [org.hibernate.jpa.HibernatePersistenceProvider] will be used instead.
+2021-06-29 13:31:40,374 INFO o.h.j.i.u.LogHelper:31 [main] HHH000204: Processing PersistenceUnitInfo [name: hibernate-connection]
+2021-06-29 13:31:40,465 INFO o.h.Version:44 [main] HHH000412: Hibernate ORM core version 5.4.31.Final
+2021-06-29 13:31:40,682 INFO o.h.a.c.r.j.JavaReflectionManager:56 [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-29 13:31:40,949 WARN o.h.e.j.c.i.ConnectionProviderInitiator:272 [main] HHH000022: c3p0 properties were encountered, but the c3p0 provider class was not found on the classpath; these properties are going to be ignored.
+2021-06-29 13:31:40,953 WARN o.h.e.j.c.i.DriverManagerConnectionProviderImpl:72 [main] HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-06-29 13:31:40,960 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:115 [main] HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost/pocket]
+2021-06-29 13:31:40,963 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:124 [main] HHH10001001: Connection properties: {password=****, user=fever_d}
+2021-06-29 13:31:40,963 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:129 [main] HHH10001003: Autocommit mode: false
+2021-06-29 13:31:40,967 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl$PooledConnections:259 [main] HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-06-29 13:31:41,067 INFO o.h.d.Dialect:175 [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL82Dialect
+2021-06-29 13:31:42,169 INFO o.h.r.t.b.j.i.DdlTransactionIsolatorNonJtaImpl:47 [main] HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@17410c07] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2021-06-29 13:31:42,202 INFO o.h.e.t.j.p.i.JtaPlatformInitiator:52 [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-29 13:31:42,956 ERROR o.p.b.app:60 [main] Bot token and username can't be empty
+2021-06-29 13:32:48,047 WARN o.h.j.b.s.ProviderChecker:58 [main] HHH015016: Encountered a deprecated javax.persistence.spi.PersistenceProvider [org.hibernate.ejb.HibernatePersistence]; [org.hibernate.jpa.HibernatePersistenceProvider] will be used instead.
+2021-06-29 13:32:48,063 INFO o.h.j.i.u.LogHelper:31 [main] HHH000204: Processing PersistenceUnitInfo [name: hibernate-connection]
+2021-06-29 13:32:48,132 INFO o.h.Version:44 [main] HHH000412: Hibernate ORM core version 5.4.31.Final
+2021-06-29 13:32:48,364 INFO o.h.a.c.r.j.JavaReflectionManager:56 [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-29 13:32:48,608 WARN o.h.e.j.c.i.ConnectionProviderInitiator:272 [main] HHH000022: c3p0 properties were encountered, but the c3p0 provider class was not found on the classpath; these properties are going to be ignored.
+2021-06-29 13:32:48,612 WARN o.h.e.j.c.i.DriverManagerConnectionProviderImpl:72 [main] HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-06-29 13:32:48,619 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:115 [main] HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost/pocket]
+2021-06-29 13:32:48,620 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:124 [main] HHH10001001: Connection properties: {password=****, user=fever_d}
+2021-06-29 13:32:48,621 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:129 [main] HHH10001003: Autocommit mode: false
+2021-06-29 13:32:48,623 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl$PooledConnections:259 [main] HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-06-29 13:32:48,725 INFO o.h.d.Dialect:175 [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL82Dialect
+2021-06-29 13:32:49,779 INFO o.h.r.t.b.j.i.DdlTransactionIsolatorNonJtaImpl:47 [main] HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@6ee99964] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2021-06-29 13:32:49,813 INFO o.h.e.t.j.p.i.JtaPlatformInitiator:52 [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-29 13:33:04,349 WARN o.h.j.b.s.ProviderChecker:58 [main] HHH015016: Encountered a deprecated javax.persistence.spi.PersistenceProvider [org.hibernate.ejb.HibernatePersistence]; [org.hibernate.jpa.HibernatePersistenceProvider] will be used instead.
+2021-06-29 13:33:04,371 INFO o.h.j.i.u.LogHelper:31 [main] HHH000204: Processing PersistenceUnitInfo [name: hibernate-connection]
+2021-06-29 13:33:04,462 INFO o.h.Version:44 [main] HHH000412: Hibernate ORM core version 5.4.31.Final
+2021-06-29 13:33:04,660 INFO o.h.a.c.r.j.JavaReflectionManager:56 [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-29 13:33:04,887 WARN o.h.e.j.c.i.ConnectionProviderInitiator:272 [main] HHH000022: c3p0 properties were encountered, but the c3p0 provider class was not found on the classpath; these properties are going to be ignored.
+2021-06-29 13:33:04,890 WARN o.h.e.j.c.i.DriverManagerConnectionProviderImpl:72 [main] HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-06-29 13:33:04,898 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:115 [main] HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost/pocket]
+2021-06-29 13:33:04,899 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:124 [main] HHH10001001: Connection properties: {password=****, user=fever_d}
+2021-06-29 13:33:04,900 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:129 [main] HHH10001003: Autocommit mode: false
+2021-06-29 13:33:04,902 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl$PooledConnections:259 [main] HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-06-29 13:33:05,001 INFO o.h.d.Dialect:175 [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL82Dialect
+2021-06-29 13:33:06,115 INFO o.h.r.t.b.j.i.DdlTransactionIsolatorNonJtaImpl:47 [main] HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@51a18b21] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2021-06-29 13:33:06,145 INFO o.h.e.t.j.p.i.JtaPlatformInitiator:52 [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-29 13:33:22,932 WARN o.h.j.b.s.ProviderChecker:58 [main] HHH015016: Encountered a deprecated javax.persistence.spi.PersistenceProvider [org.hibernate.ejb.HibernatePersistence]; [org.hibernate.jpa.HibernatePersistenceProvider] will be used instead.
+2021-06-29 13:33:22,947 INFO o.h.j.i.u.LogHelper:31 [main] HHH000204: Processing PersistenceUnitInfo [name: hibernate-connection]
+2021-06-29 13:33:23,027 INFO o.h.Version:44 [main] HHH000412: Hibernate ORM core version 5.4.31.Final
+2021-06-29 13:33:23,236 INFO o.h.a.c.r.j.JavaReflectionManager:56 [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-29 13:33:23,468 WARN o.h.e.j.c.i.ConnectionProviderInitiator:272 [main] HHH000022: c3p0 properties were encountered, but the c3p0 provider class was not found on the classpath; these properties are going to be ignored.
+2021-06-29 13:33:23,471 WARN o.h.e.j.c.i.DriverManagerConnectionProviderImpl:72 [main] HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-06-29 13:33:23,479 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:115 [main] HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost/pocket]
+2021-06-29 13:33:23,480 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:124 [main] HHH10001001: Connection properties: {password=****, user=fever_d}
+2021-06-29 13:33:23,480 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:129 [main] HHH10001003: Autocommit mode: false
+2021-06-29 13:33:23,484 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl$PooledConnections:259 [main] HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-06-29 13:33:23,586 INFO o.h.d.Dialect:175 [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL82Dialect
+2021-06-29 13:33:24,583 INFO o.h.r.t.b.j.i.DdlTransactionIsolatorNonJtaImpl:47 [main] HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@51a18b21] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2021-06-29 13:33:24,619 INFO o.h.e.t.j.p.i.JtaPlatformInitiator:52 [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-29 13:35:24,300 WARN o.h.j.b.s.ProviderChecker:58 [main] HHH015016: Encountered a deprecated javax.persistence.spi.PersistenceProvider [org.hibernate.ejb.HibernatePersistence]; [org.hibernate.jpa.HibernatePersistenceProvider] will be used instead.
+2021-06-29 13:35:24,316 INFO o.h.j.i.u.LogHelper:31 [main] HHH000204: Processing PersistenceUnitInfo [name: hibernate-connection]
+2021-06-29 13:35:24,401 INFO o.h.Version:44 [main] HHH000412: Hibernate ORM core version 5.4.31.Final
+2021-06-29 13:35:24,646 INFO o.h.a.c.r.j.JavaReflectionManager:56 [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-29 13:35:24,945 WARN o.h.e.j.c.i.ConnectionProviderInitiator:272 [main] HHH000022: c3p0 properties were encountered, but the c3p0 provider class was not found on the classpath; these properties are going to be ignored.
+2021-06-29 13:35:24,948 WARN o.h.e.j.c.i.DriverManagerConnectionProviderImpl:72 [main] HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-06-29 13:35:24,956 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:115 [main] HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost/pocket]
+2021-06-29 13:35:24,957 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:124 [main] HHH10001001: Connection properties: {password=****, user=fever_d}
+2021-06-29 13:35:24,958 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl:129 [main] HHH10001003: Autocommit mode: false
+2021-06-29 13:35:24,961 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl$PooledConnections:259 [main] HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-06-29 13:35:25,095 INFO o.h.d.Dialect:175 [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL82Dialect
+2021-06-29 13:35:26,443 INFO o.h.r.t.b.j.i.DdlTransactionIsolatorNonJtaImpl:47 [main] HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@52bf7bf6] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2021-06-29 13:35:26,472 INFO o.h.e.t.j.p.i.JtaPlatformInitiator:52 [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-29 13:35:27,282 ERROR o.p.b.app:60 [main] Bot token and username can't be empty

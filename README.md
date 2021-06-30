@@ -14,4 +14,4 @@ ____
 ____
 To communicate with Pocket, bot uses official Pocket API and implements key methods. 
 
-For nowadays Bot
+For nowadays Bot jh;h
