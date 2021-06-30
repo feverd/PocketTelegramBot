@@ -6,17 +6,26 @@ import java.util.Properties;
 
 public class PropertiesReader {
 
-    public String getPropertyValue(String parameterName) {
-        String value = "";
+    public static String getApplicationPropertyValue(String parameterName) {
+        return getPropertiesFile("application.properties")
+                .getProperty(parameterName);
+    }
+
+    public static String getBotMessages(String parameterName) {
+        return getPropertiesFile("")
+                .getProperty(parameterName);
+    }
+
+    private static Properties getPropertiesFile(String propertiesFileName) {
         Properties properties = new Properties();
 
-        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream inputStream = PropertiesReader.class.getClassLoader()
+                .getResourceAsStream(propertiesFileName)) {
             properties.load(inputStream);
-            value = properties.getProperty(parameterName);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return value;
+        return properties;
     }
 
 }
