@@ -20,12 +20,23 @@ public class Bot extends TelegramLongPollingBot {
 
     // вынести в настройки
     public Bot(EntityManager manager) {
-        PropertiesReader service = new PropertiesReader();
-        this.botToken = service.getPropertyValue("bot.token");
-        this.botUsername = service.getPropertyValue("bot.name");
+        this.botToken = PropertiesReader.getApplicationPropertyValue("bot.token");
+        this.botUsername = PropertiesReader.getApplicationPropertyValue("bot.name");
         pocketCodeDao = new PocketCodeDao(manager);
         pocketUserDao = new PocketUserDao(manager);
     }
+
+    // TODO Где запускать бота? в мейне или в классе бота ?
+
+    /*public void start() {
+        TelegramBotsApi bot = null;
+        try {
+            bot = new TelegramBotsApi(DefaultBotSession.class);
+            bot.registerBot(this.);
+        } catch (TelegramApiException e) {
+            //LOGGER.error(e.getMessage());
+        }
+    }*/
 
     @Override
     public String getBotUsername() {
@@ -41,99 +52,81 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
 
         // TODO переделать ли получаемые команды на паттерн команда и извлекать через интерфейс  ?
-
         if (update.hasMessage() && update.getMessage().hasText()) {
             SendMessage message = new SendMessage();
             message.setChatId(update.getMessage().getChatId().toString());
 
-            System.out.println(update.getMessage().getText());
-            System.out.println("@@@@@");
+            String updateMessageText = update.getMessage().getText();
+            Long id = update.getMessage().getFrom().getId();
 
-            if (isCommand(update.getMessage().getText())) {
-                System.out.println("Команда");
-                message.setText(commandMessage(update));
 
-                System.out.println(message.getText());
-            } else {
+            //TODO delete
+            System.out.println(updateMessageText);
+            System.out.println("@");
 
-                //TODO вставить проверку авторизирован ли пользователь или еще нет
-                if (isUrl(update.getMessage().getText())) {
-
-                    message.setText(sendUrl(update));
-
+            if (isCommand(updateMessageText)) {
+                if (isUser(id)) {
+                    message.setText("You are already my user \n" +
+                            "just send URL, and I will save it in your Pocket :)");
                 } else {
-                    message.setText("I accept only URL or commands started with /");
+                    message.setText(commandMessage(updateMessageText, id));
                 }
-
-            }
-
-
-            // TODO delete lines
-            //System.out.println(update.getMessage().toString());
-            System.out.println("@@@@@@@@            @@@@@@@@");
-
-            // TODO add logger
-            try {
-                execute(message); // Call method to send the message
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-
-    private boolean isCommand(String messageFromUser) {
-        boolean result = false;
-        if (messageFromUser.startsWith("/")) result = true;
-        return result;
-    }
-
-    private boolean isUrl(String text) {
-        boolean result = false;
-        if (text.startsWith("http") && text.contains("/") && text.contains(":")) result = true;
-        return result;
-    }
-
-    private boolean isUser(Long chatId) {
-        boolean result = true;
-        if (pocketUserDao.getByKey(chatId) == null) result = false;
-        return result;
-    }
-
-    private String commandMessage(Update update) {
-        String message = "Unfortunately, I know only /start and /delete commands...";
-        if ("/start".equals(update.getMessage().getText())) {
-            if (isUser(update.getMessage().getChatId())) {
-                message = "You are already my user \n" +
-                        "just send URL, and I will save it in your Pocket :)";
             } else {
-                // TODO read from properties
-                String code = pocketCodeDao.getByKey("97779-9e5f86561e627ae0c473d550").getCode();
-
-                message = "https://getpocket.com/auth/authorize?request_token="
-                        + code
-                        + "&redirect_uri=http://localhost:8080/auth/auth?chatId="
-                        + update.getMessage().getChatId();
+                if (isUrl(updateMessageText) && isUser(id)) {
+                    message.setText(sendUrl(updateMessageText, id));
+                } else {
+                    message.setText("I accept only URL or commands started with \"/\"");
+                }
             }
+
+            sendMessage(message);
         }
-        //TODO ломается авторизация (надо дропать и код приложения и просить снова все коды доступа)
-        /*else if ("/delete".equals(update.getMessage().getText())) {
-            pocketUserDao.deleteByKey(update.getMessage().getChatId());
-            message = "Data about you was successfully deleted";
-        }*/
+
+
+    }
+
+
+    private boolean isCommand(String updateMessageText) {
+        boolean result = false;
+        if (updateMessageText.startsWith("/")) result = true;
+        return result;
+    }
+
+    private boolean isUrl(String updateMessageText) {
+        boolean result = false;
+        if (updateMessageText.startsWith("http")
+                && updateMessageText.contains("/")
+                && updateMessageText.contains(":")) result = true;
+        return result;
+    }
+
+    private boolean isUser(Long id) {
+        boolean result = true;
+        if (pocketUserDao.getByKey(id) == null) result = false;
+        return result;
+    }
+
+    private String commandMessage(String updateMessageText, Long id) {
+        String message = "Unfortunately, I know only /start and command...";
+        if ("/start".equals(updateMessageText)) {
+            // TODO read from properties
+            String code = pocketCodeDao.getByKey("97779-9e5f86561e627ae0c473d550").getCode();
+
+            message = "https://getpocket.com/auth/authorize?request_token="
+                    + code
+                    + "&redirect_uri=http://localhost:8080/auth/auth?chatId="
+                    + id;
+
+        }
         return message;
     }
 
-    private String sendUrl(Update update) {
-        // TODO delete lines
-        System.out.println("@@@@@@@@@@@@@@@@");
-
-        String token = pocketUserDao.getByKey(update.getMessage().getChatId()).getAccessToken();
+    private String sendUrl(String updateMessageText, Long id) {
+        String token = pocketUserDao.getByKey(id).getAccessToken();
 
         String message = "Invalid URL or server error";
-        if ( PocketRequest.addItem(
-                new AddItemCmd(update.getMessage().getText(),
+        if (PocketRequest.addItem(
+                new AddItemCmd(updateMessageText,
                         "97779-9e5f86561e627ae0c473d550",
                         token))) {
 
@@ -141,4 +134,15 @@ public class Bot extends TelegramLongPollingBot {
         }
         return message;
     }
+
+    private void sendMessage(SendMessage sendMessage) {
+        // TODO add logger
+        try {
+            execute(sendMessage); // Call method to send the message
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
