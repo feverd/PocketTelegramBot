@@ -2,12 +2,12 @@ package org.project.pocket.request;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.project.entity.PocketAppCode;
+import org.project.entity.PocketCode;
 import org.project.entity.PocketUser;
-import org.project.pocket.commands.AccessTokenCmd;
-import org.project.pocket.commands.AddItemCmd;
-import org.project.pocket.commands.AppCodeCmd;
-import org.project.pocket.commands.Cmd;
+import org.project.pocket.commands.AccessTokenData;
+import org.project.pocket.commands.AddItemData;
+import org.project.pocket.commands.AppCodeData;
+import org.project.pocket.commands.Data;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,88 +16,63 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class PocketRequest {
+    private HttpClient client;
+    private ObjectMapper mapper;
+
+    public PocketRequest() {
+        this.client = HttpClient.newHttpClient();
+        this.mapper = new ObjectMapper();
+    }
 
     //TODO add response code check
 
-    public static PocketUser getPocketUser(AccessTokenCmd tokenCmd) {
+    public PocketUser getPocketUser(AccessTokenData tokenCmd) {
         PocketUser user = new PocketUser();
-        HttpClient client = HttpClient.newHttpClient();
+
+        HttpResponse<String> response = sendRequest(client, tokenCmd);
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
-
-            HttpResponse<String> response = client.
-                    send(getRequest(tokenCmd.getAuthorizeUrl(),
-                            mapper.writeValueAsString(tokenCmd)),
-                            HttpResponse.BodyHandlers.ofString());
-
             user = mapper.readValue(response.body(), PocketUser.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
 
         return user;
     }
 
-    public static PocketAppCode getAppCode(AppCodeCmd appCodeCmd) {
-        PocketAppCode pocketAppCode = new PocketAppCode();
-        HttpClient client = HttpClient.newHttpClient();
+    public PocketCode getAppCode(AppCodeData appCodeData) {
+        PocketCode pocketCode = new PocketCode();
+
+        HttpResponse<String> response = sendRequest(client, appCodeData);
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
-
-            HttpResponse<String> response = client
-                    .send(getRequest(appCodeCmd.getRequestUrl(),
-                            mapper.writeValueAsString(appCodeCmd)),
-                            HttpResponse.BodyHandlers.ofString());
-
-
-            pocketAppCode = mapper.readValue(response.body(), PocketAppCode.class);
-            pocketAppCode.setConsumerKey(appCodeCmd.getConsumerKey());
-            System.out.println(pocketAppCode.toString());
-
+            pocketCode = mapper.readValue(response.body(), PocketCode.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return pocketAppCode;
+        //TODO delete
+        pocketCode.setConsumerKey(appCodeData.getConsumerKey());
+        System.out.println(pocketCode.toString());
+
+
+        return pocketCode;
     }
 
-    public static boolean addItem(AddItemCmd addItemCmd) {
+    public boolean addItem(AddItemData addItemData) {
         boolean result = false;
-        HttpClient client = HttpClient.newHttpClient();
 
-        /*try {*/
-            /*HttpResponse<String> response = client.
-                    send(getRequest(addItemCmd.getAddUrl(),
-                            new ObjectMapper().writeValueAsString(addItemCmd)),
-                            HttpResponse.BodyHandlers.ofString());*/
+        HttpResponse<String> response = sendRequest(client, addItemData);
 
-            HttpResponse<String> response = sendRequest(client, addItemCmd);
-
-            if (response.statusCode() == 200) result = true;
-
-        /*} catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        if (response.statusCode() == 200) result = true;
 
         return result;
     }
 
-    private static HttpRequest getRequest(String uri, String body) {
-        HttpRequest request = HttpRequest.newBuilder(URI.create(uri))
+    private HttpRequest buildRequest(String uri, String body) {
+        HttpRequest request = HttpRequest
+                .newBuilder(URI.create(uri))
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .header("Content-Type", "application/json; charset=UTF8")
                 .header("X-Accept", "application/json")
@@ -105,15 +80,13 @@ public class PocketRequest {
         return request;
     }
 
-    private static <T> HttpResponse<String> sendRequest(HttpClient client, Cmd cmd) {
+    private <T> HttpResponse<String> sendRequest(HttpClient client, Data data) {
         HttpResponse<String> response = null;
         try {
-
             response = client
-                    .send(getRequest(cmd.getUri(),
-                            new ObjectMapper().writeValueAsString((T) cmd)),
+                    .send(buildRequest(data.getUri(),
+                            new ObjectMapper().writeValueAsString((T) data)),
                             HttpResponse.BodyHandlers.ofString());
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -122,12 +95,5 @@ public class PocketRequest {
         return response;
     }
 
-    /*private static <T> T getObjectFromJson(String jsonText, Object object, ObjectMapper mapper) {
-        try {
-            object = mapper.readValue(jsonText, object.getClass());
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return (T) object;
-    }*/
+
 }
