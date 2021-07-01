@@ -1,10 +1,13 @@
 package org.project.bot;
 
-import org.project.dao.PocketCodeDao;
 import org.project.dao.PocketUserDao;
-import org.project.pocket.commands.AddItemCmd;
+import org.project.entity.PocketCode;
+import org.project.entity.PocketUser;
+import org.project.pocket.commands.AddItemData;
+import org.project.pocket.commands.AppCodeData;
 import org.project.pocket.request.PocketRequest;
-import org.project.service.PropertiesReader;
+import org.project.service.ApplicationPropertiesReader;
+import org.project.service.BotMessagesReader;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,28 +18,17 @@ import javax.persistence.EntityManager;
 public class Bot extends TelegramLongPollingBot {
     private String botToken;
     private String botUsername;
-    private PocketCodeDao pocketCodeDao;
     private PocketUserDao pocketUserDao;
+    private PocketRequest pocketRequest;
 
     // вынести в настройки
     public Bot(EntityManager manager) {
-        this.botToken = PropertiesReader.getApplicationPropertyValue("bot.token");
-        this.botUsername = PropertiesReader.getApplicationPropertyValue("bot.name");
-        pocketCodeDao = new PocketCodeDao(manager);
+        this.botToken = ApplicationPropertiesReader.getProperty("bot.token");
+        this.botUsername = ApplicationPropertiesReader.getProperty("bot.name");
         pocketUserDao = new PocketUserDao(manager);
+        pocketRequest = new PocketRequest();
     }
 
-    // TODO Где запускать бота? в мейне или в классе бота ?
-
-    /*public void start() {
-        TelegramBotsApi bot = null;
-        try {
-            bot = new TelegramBotsApi(DefaultBotSession.class);
-            bot.registerBot(this.);
-        } catch (TelegramApiException e) {
-            //LOGGER.error(e.getMessage());
-        }
-    }*/
 
     @Override
     public String getBotUsername() {
@@ -51,31 +43,34 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        // TODO переделать ли получаемые команды на паттерн команда и извлекать через интерфейс  ?
         if (update.hasMessage() && update.getMessage().hasText()) {
             SendMessage message = new SendMessage();
-            message.setChatId(update.getMessage().getChatId().toString());
+            Long id = update.getMessage().getFrom().getId();
+            message.setChatId(id.toString());
 
             String updateMessageText = update.getMessage().getText();
-            Long id = update.getMessage().getFrom().getId();
 
 
             //TODO delete
+
             System.out.println(updateMessageText);
             System.out.println("@");
 
             if (isCommand(updateMessageText)) {
+
                 if (isUser(id)) {
-                    message.setText("You are already my user \n" +
-                            "just send URL, and I will save it in your Pocket :)");
+                    message.setText(BotMessagesReader.getProperty("bot.alreadyUser"));
                 } else {
+                    // TODO сделать метод executeCommand
                     message.setText(commandMessage(updateMessageText, id));
                 }
+
             } else {
+
                 if (isUrl(updateMessageText) && isUser(id)) {
                     message.setText(sendUrl(updateMessageText, id));
                 } else {
-                    message.setText("I accept only URL or commands started with \"/\"");
+                    message.setText(BotMessagesReader.getProperty("bot.acceptedMessages"));
                 }
             }
 
@@ -102,22 +97,48 @@ public class Bot extends TelegramLongPollingBot {
 
     private boolean isUser(Long id) {
         boolean result = true;
-        if (pocketUserDao.getByKey(id) == null) result = false;
+        if (pocketUserDao.getByKey(id).getAccessToken() == null) result = false;
         return result;
     }
 
     private String commandMessage(String updateMessageText, Long id) {
-        String message = "Unfortunately, I know only /start and command...";
-        if ("/start".equals(updateMessageText)) {
-            // TODO read from properties
-            String code = pocketCodeDao.getByKey("97779-9e5f86561e627ae0c473d550").getCode();
+        String message = BotMessagesReader.getProperty("bot.invalidCommand");
+
+
+        // TODO SWITCH
+        if (Commands.START.name
+                .equals(updateMessageText)) {
+
+            PocketCode pocketCode = pocketRequest.getAppCode(
+                    new AppCodeData(
+                            ApplicationPropertiesReader
+                                    .getProperty("bot.redirect")));
+
+            PocketUser user = new PocketUser();
+            user.setId(id);
+            user.setPocketAppCode(pocketCode);
+            pocketUserDao.add(user);
+
+
+            // TODO delete
+            System.out.println(pocketCode.getCode());
+            System.out.println(updateMessageText + " " + id);
 
             message = "https://getpocket.com/auth/authorize?request_token="
-                    + code
-                    + "&redirect_uri=http://localhost:8080/auth/auth?chatId="
+                    + pocketCode.getCode()
+                    + "&redirect_uri="
+                    + ApplicationPropertiesReader.getProperty("bot.redirectUri")
                     + id;
 
+        } else if (Commands.HELP.name
+                .equals(updateMessageText)) {
+            message = "help command in progress";
+        } else if (Commands.DELETE.name
+                .equals(updateMessageText)) {
+            message = "delete command in progress";
         }
+
+
         return message;
     }
 
@@ -125,24 +146,43 @@ public class Bot extends TelegramLongPollingBot {
         String token = pocketUserDao.getByKey(id).getAccessToken();
 
         String message = "Invalid URL or server error";
-        if (PocketRequest.addItem(
-                new AddItemCmd(updateMessageText,
-                        "97779-9e5f86561e627ae0c473d550",
-                        token))) {
+        if (pocketRequest.addItem(
+                new AddItemData(updateMessageText, token))) {
 
             message = "Don't forget about your pocket links, the are waiting for you";
         }
         return message;
     }
 
-    private void sendMessage(SendMessage sendMessage) {
-        // TODO add logger
+    private void sendMessage(SendMessage message) {
         try {
-            execute(sendMessage); // Call method to send the message
+            execute(message); // Call method to send the message
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
 
 
+    enum Commands {
+        // TODO узнать модно ли грузить из файла в перечисления
+        START("/start", ""),
+        DELETE("/delete", ""),
+        HELP("/help", "");
+
+        private String name;
+        private String message;
+
+        Commands(String name, String message) {
+            this.name = name;
+            this.message = message;
+        }
+    }
 }
+
+
+
+
+
+
+
+
