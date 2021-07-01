@@ -25,7 +25,9 @@ public class PocketUserDao implements Dao<PocketUser, Long> {
 
     @Override
     public void update(PocketUser entity) {
+        manager.getTransaction().begin();
         manager.merge(entity);
+        manager.getTransaction().commit();
     }
 
     @Override

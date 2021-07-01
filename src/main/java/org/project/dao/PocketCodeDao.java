@@ -1,31 +1,41 @@
 package org.project.dao;
 
-import org.project.entity.PocketAppCode;
+import org.project.entity.PocketCode;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.Objects;
 
-public class PocketCodeDao implements Dao<PocketAppCode, String> {
+public class PocketCodeDao implements Dao<PocketCode, String> {
     private EntityManager manager;
 
     public PocketCodeDao(EntityManager manager) {
         this.manager = Objects.requireNonNull(manager);
     }
 
+
+    public PocketCode getByCode(String code) {
+        Query query = manager.createQuery(
+                "SELECT p FROM PocketCode p WHERE p.code = :c");
+        query.setParameter("c", code);
+
+        return (PocketCode) query.getSingleResult();
+    }
+
     @Override
-    public void add(PocketAppCode entity) {
+    public void add(PocketCode entity) {
         manager.getTransaction().begin();
         manager.persist(entity);
         manager.getTransaction().commit();
     }
 
     @Override
-    public PocketAppCode getByKey(String s) {
-        return manager.find(PocketAppCode.class, s);
+    public PocketCode getByKey(String s) {
+        return manager.find(PocketCode.class, s);
     }
 
     @Override
-    public void update(PocketAppCode entity) {
+    public void update(PocketCode entity) {
         manager.merge(entity);
     }
 
