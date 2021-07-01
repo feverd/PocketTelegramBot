@@ -1,9 +1,5 @@
 package org.project.bot;
 
-import org.project.dao.PocketCodeDao;
-import org.project.entity.PocketAppCode;
-import org.project.pocket.commands.AppCodeCmd;
-import org.project.pocket.request.PocketRequest;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -17,38 +13,17 @@ public class App {
 
     public static void main(String[] args) {
 
-
-
-        // TODO сделать проверку на код для приложения в БД
-
-        // TODO когда добавил логер начались всякие приколы.
-        //  Работало фоном пропали логирования hibernate и тд
-
-
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("hibernate-connection");
         EntityManager manager = factory.createEntityManager();
-        PocketCodeDao pocketCodeDao = new PocketCodeDao(manager);
-
-        if (pocketCodeDao.getByKey("97779-9e5f86561e627ae0c473d550") == null) {
-            PocketAppCode pocketAppCode = PocketRequest.getAppCode(
-                    new AppCodeCmd("97779-9e5f86561e627ae0c473d550",
-                    "https://t.me/PostPocket_bot"));
-
-            pocketCodeDao.add(pocketAppCode);
-
-            //TODO delete
-            System.out.println(pocketAppCode);
-        }
-
 
         TelegramBotsApi bot = null;
         try {
             bot = new TelegramBotsApi(DefaultBotSession.class);
             bot.registerBot(new Bot(manager));
         } catch (TelegramApiException e) {
+            e.printStackTrace();
             //LOGGER.error(e.getMessage());
         }
-
 
     }
 
