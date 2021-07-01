@@ -1,12 +1,11 @@
 package org.project.server;
 
-import org.project.dao.PocketCodeDao;
 import org.project.dao.PocketUserDao;
-import org.project.entity.PocketAppCode;
+import org.project.entity.PocketCode;
 import org.project.entity.PocketUser;
-import org.project.pocket.commands.AccessTokenCmd;
+import org.project.pocket.commands.AccessTokenData;
 import org.project.pocket.request.PocketRequest;
-import org.project.service.PropertiesReader;
+import org.project.service.ApplicationPropertiesReader;
 
 
 import javax.persistence.EntityManager;
@@ -21,55 +20,71 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/auth/*"})
 public class AuthorizationServlet extends HttpServlet {
+    private PocketRequest pocketRequest;
+    private EntityManager manager;
+
+
+    public AuthorizationServlet() {
+        this.pocketRequest = new PocketRequest();
+        this.manager = getManager();
+    }
+
+    private EntityManager getManager() {
+        // TODO так нормально делать ?
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("hibernate-connection");
+        return factory.createEntityManager();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // TODO обрабатывать исключение или пробрасывать ?
 
-        //TODO where to create manager? in methods or in class fields
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("hibernate-connection");
-        EntityManager manager = factory.createEntityManager();
-        PocketCodeDao pocketCodeDao = new PocketCodeDao(manager);
+        PocketUserDao pocketUserDao = new PocketUserDao(manager);
 
+        Long id = Long.parseLong(req.getParameter("id"));
 
-        PocketAppCode pocketAppCode = pocketCodeDao.getByKey("97779-9e5f86561e627ae0c473d550");
-        if (pocketAppCode == null) {
+        PocketUser pocketUser = getUser(id, pocketUserDao);
+
+        if (pocketUser.getPocketAppCode() == null) {
             resp.sendError(500, "Server error, try later");
         } else {
-            String code = pocketAppCode.getCode();
 
-            System.out.println(code);
+            //TODO delete
+            String code = pocketUser.getPocketAppCode().getCode();
+            System.out.println("____________CODE___________");
+            System.out.println(code + "code user: " + pocketUser.getId());
 
 
-            getAndSaveUser(manager, pocketAppCode, Long.parseLong(req.getParameter("id")));
+            //TODO создавать DAO в класе или отдельно ?
+            getAndUpdateUser(manager, pocketUser.getPocketAppCode(), id);
 
-            resp.sendRedirect(PropertiesReader.getApplicationPropertyValue("server.redirect"));
+            resp.sendRedirect(ApplicationPropertiesReader.getProperty("server.redirect"));
         }
     }
 
-
-    private boolean isUser(Long id, PocketUserDao pocketUserDao) {
-        boolean result = true;
-        if (pocketUserDao.getByKey(id) == null) result = false;
-        return result;
+    private PocketUser getUser(Long id, PocketUserDao pocketUserDao) {
+        return pocketUserDao.getByKey(id);
     }
 
-    private void getAndSaveUser(EntityManager manager, PocketAppCode pocketAppCode, Long id) {
+    private void getAndUpdateUser(EntityManager manager, PocketCode pocketCode, Long id) {
         PocketUserDao pocketUserDao = new PocketUserDao(manager);
 
-        if (isUser(id, pocketUserDao)) {
+        if (getUser(id, pocketUserDao).getAccessToken() != null) {
             return;
         }
 
 
         // TODO ask about commands
-        PocketUser user = PocketRequest.getPocketUser(new AccessTokenCmd(/*pocketAppCode.getConsumerKey(), */pocketAppCode.getCode()));
+        PocketUser user = pocketRequest.getPocketUser(new AccessTokenData(pocketCode.getCode()));
         user.setId(id);
+        user.setPocketAppCode(pocketCode);
 
 
-        pocketUserDao.add(user);
 
-        //TODO delete
+        pocketUserDao.update(user);
+
+        //TODO delete*/
+        System.out.println("__________FULL USER INFO__________");
         System.out.println(user);
     }
 
