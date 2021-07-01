@@ -10,10 +10,15 @@ import javax.persistence.*;
 public class PocketUser {
     @Id
     @JsonIgnore
-    @Column(name = "chatId")
     private Long id;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private PocketCode pocketCode;
+
     @JsonProperty(value = "access_token")
     private String accessToken;
+
     @JsonProperty(value = "username")
     private String email;
 
@@ -27,6 +32,14 @@ public class PocketUser {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public PocketCode getPocketAppCode() {
+        return pocketCode;
+    }
+
+    public void setPocketAppCode(PocketCode pocketCode) {
+        this.pocketCode = pocketCode;
     }
 
     public void setAccessToken(String accessToken) {
@@ -45,6 +58,7 @@ public class PocketUser {
     public String toString() {
         return "PocketUser{" +
                 "id=" + id +
+                ", pocketCode=" + pocketCode +
                 ", accessToken='" + accessToken + '\'' +
                 ", email='" + email + '\'' +
                 '}';

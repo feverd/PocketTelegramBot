@@ -9,19 +9,48 @@ import javax.persistence.*;
 @Entity
 @Table(name = "tb_appCode")
 
-public class PocketAppCode {
+public class PocketCode {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
+    private int id;
+
+    @OneToOne(mappedBy = "pocketCode")
+    @JsonIgnore
+    private PocketUser pocketUser;
+
     @Column(nullable = false)
     @JsonIgnore
     private String consumerKey;
+
+    //@JsonIgnore
+    //TODO подумать сделать связь или нет
+
     private String code;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+
     @Transient
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String state;
 
 
     public String getCode() {
         return code;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public PocketUser getPocketUser() {
+        return pocketUser;
+    }
+
+    public void setPocketUser(PocketUser pocketUser) {
+        this.pocketUser = pocketUser;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setCode(String code) {
