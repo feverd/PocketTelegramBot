@@ -1,4 +1,4 @@
-package org.project.pocket.commands;
+package org.project.pocket.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

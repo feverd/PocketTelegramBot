@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.project.entity.PocketCode;
 import org.project.entity.PocketUser;
-import org.project.pocket.commands.AccessTokenData;
-import org.project.pocket.commands.AddItemData;
-import org.project.pocket.commands.AppCodeData;
-import org.project.pocket.commands.Data;
+import org.project.pocket.data.AccessTokenData;
+import org.project.pocket.data.AddItemData;
+import org.project.pocket.data.AppCodeData;
+import org.project.pocket.data.Data;
 
 import java.io.IOException;
 import java.net.URI;
@@ -77,6 +77,7 @@ public class PocketRequest {
                 .header("Content-Type", "application/json; charset=UTF8")
                 .header("X-Accept", "application/json")
                 .build();
+
         return request;
     }
 

@@ -1,4 +1,4 @@
-package org.project.pocket.commands;
+package org.project.pocket.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,4 +30,5 @@ public abstract class Data {
     public String getConsumerKey() {
         return consumerKey;
     }
+
 }

@@ -3,7 +3,7 @@ package org.project.server;
 import org.project.dao.PocketUserDao;
 import org.project.entity.PocketCode;
 import org.project.entity.PocketUser;
-import org.project.pocket.commands.AccessTokenData;
+import org.project.pocket.data.AccessTokenData;
 import org.project.pocket.request.PocketRequest;
 import org.project.service.ApplicationPropertiesReader;
 
@@ -37,7 +37,6 @@ public class AuthorizationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        // TODO обрабатывать исключение или пробрасывать ?
 
         PocketUserDao pocketUserDao = new PocketUserDao(manager);
 
@@ -74,14 +73,13 @@ public class AuthorizationServlet extends HttpServlet {
         }
 
 
-        // TODO ask about commands
         PocketUser user = pocketRequest.getPocketUser(new AccessTokenData(pocketCode.getCode()));
         user.setId(id);
         user.setPocketAppCode(pocketCode);
 
-
-
         pocketUserDao.update(user);
+
+
 
         //TODO delete*/
         System.out.println("__________FULL USER INFO__________");

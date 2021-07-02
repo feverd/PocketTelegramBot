@@ -16,6 +16,9 @@ public class PocketUserDao implements Dao<PocketUser, Long> {
         manager.getTransaction().begin();
         manager.persist(entity);
         manager.getTransaction().commit();
+
+        // TODO узнать почему так
+        manager.clear();
     }
 
     @Override

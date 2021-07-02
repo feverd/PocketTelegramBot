@@ -3,8 +3,8 @@ package org.project.bot;
 import org.project.dao.PocketUserDao;
 import org.project.entity.PocketCode;
 import org.project.entity.PocketUser;
-import org.project.pocket.commands.AddItemData;
-import org.project.pocket.commands.AppCodeData;
+import org.project.pocket.data.AddItemData;
+import org.project.pocket.data.AppCodeData;
 import org.project.pocket.request.PocketRequest;
 import org.project.service.ApplicationPropertiesReader;
 import org.project.service.BotMessagesReader;
@@ -42,7 +42,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-
         if (update.hasMessage() && update.getMessage().hasText()) {
             SendMessage message = new SendMessage();
             Long id = update.getMessage().getFrom().getId();
@@ -52,31 +51,25 @@ public class Bot extends TelegramLongPollingBot {
 
 
             //TODO delete
-
+            System.out.println("\n_______TEXT_______");
             System.out.println(updateMessageText);
-            System.out.println("@");
+
 
             if (isCommand(updateMessageText)) {
 
-                if (isUser(id)) {
-                    message.setText(BotMessagesReader.getProperty("bot.alreadyUser"));
-                } else {
-                    // TODO сделать метод executeCommand
-                    message.setText(commandMessage(updateMessageText, id));
-                }
-
+                message.setText(executeCommandAndGetMessage(updateMessageText, id));
             } else {
-
                 if (isUrl(updateMessageText) && isUser(id)) {
-                    message.setText(sendUrl(updateMessageText, id));
+
+                    message.setText(sendUrlAndGetMessage(updateMessageText, id));
                 } else {
-                    message.setText(BotMessagesReader.getProperty("bot.acceptedMessages"));
+
+                    message.setText(BotMessagesReader.getProperty("bot.message.help"));
                 }
             }
 
             sendMessage(message);
         }
-
 
     }
 
@@ -91,65 +84,86 @@ public class Bot extends TelegramLongPollingBot {
         boolean result = false;
         if (updateMessageText.startsWith("http")
                 && updateMessageText.contains("/")
-                && updateMessageText.contains(":")) result = true;
+                && updateMessageText.contains(":")
+                && updateMessageText.contains(".")) result = true;
         return result;
     }
 
     private boolean isUser(Long id) {
         boolean result = true;
-        if (pocketUserDao.getByKey(id).getAccessToken() == null) result = false;
+        if (pocketUserDao.getByKey(id) == null) result = false;
         return result;
     }
 
-    private String commandMessage(String updateMessageText, Long id) {
-        String message = BotMessagesReader.getProperty("bot.invalidCommand");
+    private String executeCommandAndGetMessage(String updateMessageText, Long id) {
+        String message = BotMessagesReader.getProperty("bot.message.invalidCommand");
 
+        switch (updateMessageText) {
+            case "/start":
+                //TODO delete
+                System.out.println("______START______");
 
-        // TODO SWITCH
-        if (Commands.START.name
-                .equals(updateMessageText)) {
+                if (isUser(id)) {
+                    message = BotMessagesReader.getProperty("bot.message.alreadyUser");
+                } else {
+                    //TODO delete
+                    System.out.println("_____NEW USER_____");
 
-            PocketCode pocketCode = pocketRequest.getAppCode(
-                    new AppCodeData(
-                            ApplicationPropertiesReader
-                                    .getProperty("bot.redirect")));
+                    PocketCode pocketCode = pocketRequest.getAppCode(
+                            new AppCodeData(
+                                    ApplicationPropertiesReader
+                                            .getProperty("bot.redirect")));
 
-            PocketUser user = new PocketUser();
-            user.setId(id);
-            user.setPocketAppCode(pocketCode);
-            pocketUserDao.add(user);
+                    PocketUser user = new PocketUser();
+                    user.setId(id);
+                    user.setPocketAppCode(pocketCode);
+                    pocketUserDao.add(user);
 
+                    message = BotMessagesReader.getProperty("bot.message.start")
+                            + "\nhttps://getpocket.com/auth/authorize?request_token="
+                            + pocketCode.getCode()
+                            + "&redirect_uri="
+                            + ApplicationPropertiesReader.getProperty("bot.redirectUri")
+                            + id;
+                }
+                break;
 
-            // TODO delete
-            System.out.println(pocketCode.getCode());
-            System.out.println(updateMessageText + " " + id);
+            case "/help":
+                //TODO delete
+                System.out.println("\n______help______");
 
-            message = "https://getpocket.com/auth/authorize?request_token="
-                    + pocketCode.getCode()
-                    + "&redirect_uri="
-                    + ApplicationPropertiesReader.getProperty("bot.redirectUri")
-                    + id;
+                message = BotMessagesReader.getProperty("bot.message.help");
+                break;
 
-        } else if (Commands.HELP.name
-                .equals(updateMessageText)) {
-            message = "help command in progress";
-        } else if (Commands.DELETE.name
-                .equals(updateMessageText)) {
-            message = "delete command in progress";
+            case "/delete":
+                //TODO delete
+                System.out.println("\n______delete______");
+
+                pocketUserDao.deleteByKey(id);
+                message = BotMessagesReader.getProperty("bot.message.delete");
+                break;
         }
 
-
         return message;
+
     }
 
-    private String sendUrl(String updateMessageText, Long id) {
+    private String sendUrlAndGetMessage(String updateMessageText, Long id) {
+
         String token = pocketUserDao.getByKey(id).getAccessToken();
 
+        /*//TODO delete
+        System.out.println("_______USER_______");
+        System.out.println(pocketUserDao.getByKey(id));*/
+
         String message = "Invalid URL or server error";
+        //TODO delete
+        System.out.println("_____SEND_____");
+
         if (pocketRequest.addItem(
                 new AddItemData(updateMessageText, token))) {
 
-            message = "Don't forget about your pocket links, the are waiting for you";
+            message = BotMessagesReader.getProperty("bot.message.successSave");
         }
         return message;
     }
@@ -162,21 +176,6 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-
-    enum Commands {
-        // TODO узнать модно ли грузить из файла в перечисления
-        START("/start", ""),
-        DELETE("/delete", ""),
-        HELP("/help", "");
-
-        private String name;
-        private String message;
-
-        Commands(String name, String message) {
-            this.name = name;
-            this.message = message;
-        }
-    }
 }
 
 

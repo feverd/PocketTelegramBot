@@ -8,7 +8,7 @@
     <persistence-unit name="hibernate-connection" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <class>org.project.entity.PocketUser</class>
-        <class>org.project.entity.PocketAppCode</class>
+        <class>org.project.entity.PocketCode</class>
 
 
         <properties>

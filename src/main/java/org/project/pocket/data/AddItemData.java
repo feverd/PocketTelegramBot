@@ -1,4 +1,4 @@
-package org.project.pocket.commands;
+package org.project.pocket.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,9 +7,9 @@ import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AddItemData extends Data {
+    @JsonProperty(value = "url")
     private String url;
-    private String title;
-    private String tags;
+
     @JsonProperty(value = "access_token")
     private String accessToken;
 
