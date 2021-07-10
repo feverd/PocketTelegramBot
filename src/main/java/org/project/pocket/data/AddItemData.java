@@ -27,4 +27,11 @@ public class AddItemData extends Data {
         this.accessToken = Objects.requireNonNull(accessToken);
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
 }
