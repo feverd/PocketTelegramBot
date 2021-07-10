@@ -19,28 +19,13 @@
 
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect"/>
-            <!--эти 2 строчки тру, говорят, что запросы составл. хибернейтом будут отражаться в консоль-->
-            <!--<property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>-->
-            <!--немного другой синтаксис-->
-            <!--если ORM будет использовать пул соединейний нужно смотреть как пишутся настройки c3p0 -->
-            <!--<property name="hibernate.c3p0.min_size" value="5"/>
-            <property name="hibernate.c3p0.max_size" value="20"/>
+            <property name="hibernate.c3p0.max_size" value="10"/>
             <property name="hibernate.c3p0.timeout" value="300"/>
             <property name="hibernate.c3p0.max_statements" value="50"/>
-            <property name="hibernate.c3p0.idle_test_period" value="3000"/>-->
-            <!-- validate | update | create | create-drop | none -->
-            <!--что делать с таблицами в БД при запуске программы-->
-            <!--none ничего -->
-            <!--create-drop создаст при запуске и удалит, когда программа закончится-->
-            <!--create - пересоздание таблицы при каждом запуске (те старая перезатирается)-->
-            <!--update - будет обновлять структуру таблицы -->
-            <!--validate - проверит классы, но делать ничего не будет (мб ощибку или несоответсвие выдаст)-->
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.c3p0.idle_test_period" value="3000"/>
 
-            <!--если есть какой-то SQL файл с SQL запросами и надо чтоб они выполнились при запуске проги,-->
-            <!--то надо раскоментирвать и указать ссылку на файл-->
-            <!-- <property name="javax.persistence.sql-load-script-source" value="META-INF/path_to_sql.sql" />-->
+
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>
 </persistence>
