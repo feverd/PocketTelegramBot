@@ -30,7 +30,6 @@ public class AuthorizationServlet extends HttpServlet {
     }
 
     private EntityManager getManager() {
-        // TODO так нормально делать ?
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("hibernate-connection");
         return factory.createEntityManager();
     }
@@ -48,13 +47,9 @@ public class AuthorizationServlet extends HttpServlet {
             resp.sendError(500, "Server error, try later");
         } else {
 
-            //TODO delete
-            String code = pocketUser.getPocketAppCode().getCode();
-            System.out.println("____________CODE___________");
-            System.out.println(code + "code user: " + pocketUser.getId());
 
 
-            //TODO создавать DAO в класе или отдельно ?
+
             getAndUpdateUser(manager, pocketUser.getPocketAppCode(), id);
 
             resp.sendRedirect(ApplicationPropertiesReader.getProperty("server.redirect"));
@@ -72,18 +67,11 @@ public class AuthorizationServlet extends HttpServlet {
             return;
         }
 
-
         PocketUser user = pocketRequest.getPocketUser(new AccessTokenData(pocketCode.getCode()));
         user.setId(id);
         user.setPocketAppCode(pocketCode);
 
         pocketUserDao.update(user);
-
-
-
-        //TODO delete*/
-        System.out.println("__________FULL USER INFO__________");
-        System.out.println(user);
     }
 
 }
