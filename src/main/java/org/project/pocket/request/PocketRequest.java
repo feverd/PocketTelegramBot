@@ -52,11 +52,6 @@ public class PocketRequest {
             e.printStackTrace();
         }
 
-        //TODO delete
-        pocketCode.setConsumerKey(appCodeData.getConsumerKey());
-        System.out.println(pocketCode.toString());
-
-
         return pocketCode;
     }
 
@@ -81,12 +76,16 @@ public class PocketRequest {
         return request;
     }
 
+
+    /**
+     * Generic method to send request and get response
+     * */
     private <T> HttpResponse<String> sendRequest(HttpClient client, Data data) {
         HttpResponse<String> response = null;
         try {
             response = client
                     .send(buildRequest(data.getUri(),
-                            new ObjectMapper().writeValueAsString((T) data)),
+                            mapper.writeValueAsString((T) data)),
                             HttpResponse.BodyHandlers.ofString());
         } catch (IOException e) {
             e.printStackTrace();
