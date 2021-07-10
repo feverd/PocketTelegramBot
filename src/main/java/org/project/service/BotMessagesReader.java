@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 
-//TODO добавить ли родителя ?
+//TODO При разбивке на модули перенести в разные модули
 public class BotMessagesReader {
     private static BotMessagesReader instance;
     private Properties properties;
