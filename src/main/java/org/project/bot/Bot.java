@@ -21,7 +21,7 @@ public class Bot extends TelegramLongPollingBot {
     private PocketUserDao pocketUserDao;
     private PocketRequest pocketRequest;
 
-    // вынести в настройки
+
     public Bot(EntityManager manager) {
         this.botToken = ApplicationPropertiesReader.getProperty("bot.token");
         this.botUsername = ApplicationPropertiesReader.getProperty("bot.name");
@@ -50,24 +50,15 @@ public class Bot extends TelegramLongPollingBot {
             String updateMessageText = update.getMessage().getText();
 
 
-            //TODO delete
-            System.out.println("\n_______TEXT_______");
-            System.out.println(updateMessageText);
-
-
             if (isCommand(updateMessageText)) {
-
                 message.setText(executeCommandAndGetMessage(updateMessageText, id));
             } else {
                 if (isUrl(updateMessageText) && isUser(id)) {
-
                     message.setText(sendUrlAndGetMessage(updateMessageText, id));
                 } else {
-
                     message.setText(BotMessagesReader.getProperty("bot.message.help"));
                 }
             }
-
             sendMessage(message);
         }
 
@@ -100,15 +91,9 @@ public class Bot extends TelegramLongPollingBot {
 
         switch (updateMessageText) {
             case "/start":
-                //TODO delete
-                System.out.println("______START______");
-
                 if (isUser(id)) {
                     message = BotMessagesReader.getProperty("bot.message.alreadyUser");
                 } else {
-                    //TODO delete
-                    System.out.println("_____NEW USER_____");
-
                     PocketCode pocketCode = pocketRequest.getAppCode(
                             new AppCodeData(
                                     ApplicationPropertiesReader
@@ -129,16 +114,10 @@ public class Bot extends TelegramLongPollingBot {
                 break;
 
             case "/help":
-                //TODO delete
-                System.out.println("\n______help______");
-
                 message = BotMessagesReader.getProperty("bot.message.help");
                 break;
 
             case "/delete":
-                //TODO delete
-                System.out.println("\n______delete______");
-
                 pocketUserDao.deleteByKey(id);
                 message = BotMessagesReader.getProperty("bot.message.delete");
                 break;
@@ -152,13 +131,7 @@ public class Bot extends TelegramLongPollingBot {
 
         String token = pocketUserDao.getByKey(id).getAccessToken();
 
-        /*//TODO delete
-        System.out.println("_______USER_______");
-        System.out.println(pocketUserDao.getByKey(id));*/
-
         String message = "Invalid URL or server error";
-        //TODO delete
-        System.out.println("_____SEND_____");
 
         if (pocketRequest.addItem(
                 new AddItemData(updateMessageText, token))) {
